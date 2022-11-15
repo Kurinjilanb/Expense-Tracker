@@ -35,7 +35,7 @@ DEBUG=str(os.environ.get('DEBUG'))or'1'
 # ALLOWED_HOSTS = []
 # if ENV_ALLOWED_HOST is not None:
 #     ALLOWED_HOSTS = [ ENV_ALLOWED_HOST ]
-ALLOWED_HOSTS = ['pipeline-reflective-bear.mybluemix.net' , '127.0.0.1']
+ALLOWED_HOSTS = ['pipeline-silly-tiger.mybluemix.net' , '127.0.0.1']
 
 
 # Application definition
