@@ -35,6 +35,6 @@ class UserProfile(models.Model):
     profession = models.CharField(max_length = 10, choices=PROFESSION_CHOICES)
     Savings = models.IntegerField( null=True, blank=True)
     income = models.BigIntegerField(null=True, blank=True)
-    image = models.ImageField(upload_to='profile_image',blank=True)
+    #image = models.ImageField(upload_to='profile_image',blank=True)
     def __str__(self):
        return self.user.username

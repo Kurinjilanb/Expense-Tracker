@@ -8,13 +8,18 @@ from django.contrib.sessions.models import Session
 from django.core.paginator import Paginator
 from django.http import JsonResponse
 import datetime
+from django.contrib.auth.decorators import login_required
+from .decorators import unauthorized
+
 
 # Create your views here.
+@login_required(login_url='/handlelogin')
 def home(request):
     if request.session.has_key('is_logged'):
         return redirect('/index')
     return render(request,'home/login.html')
-   # return HttpResponse('This is home')
+
+@login_required(login_url='/handlelogin')
 def index(request):
     if request.session.has_key('is_logged'):
         user_id = request.session["user_id"]
@@ -23,52 +28,33 @@ def index(request):
         paginator = Paginator(addmoney_info , 4)
         page_number = request.GET.get('page')
         page_obj = Paginator.get_page(paginator,page_number)
-        context = {
-            # 'add_info' : addmoney_info,
-           'page_obj' : page_obj
-        }
-    #if request.session.has_key('is_logged'):
+        context = {'page_obj' : page_obj }
         return render(request,'home/index.html',context)
     return redirect('home')
-    #return HttpResponse('This is blog')
+
+@unauthorized
 def register(request):
     return render(request,'home/register.html')
-    #return HttpResponse('This is blog')
+
+@unauthorized
 def password(request):
     return render(request,'home/password.html')
 
-def search(request):
-    if request.session.has_key('is_logged'):
-        user_id = request.session["user_id"]
-        user = User.objects.get(id=user_id)
-        fromdate = request.GET['fromdate']
-        todate = request.GET['todate']
-        addmoney = Addmoney_info.objects.filter(user=user, Date__range=[fromdate,todate]).order_by('-Date')
-        return render(request,'home/tables.html',{'addmoney':addmoney})
-    return redirect('home')
-
-def tables(request):
-    if request.session.has_key('is_logged'):
-        user_id = request.session["user_id"]
-        user = User.objects.get(id=user_id)
-        addmoney = Addmoney_info.objects.filter(user=user).order_by('-Date')
-        return render(request,'home/tables.html',{'addmoney':addmoney})
-    return redirect('home')
-
-def addmoney(request):
-    return render(request,'home/addmoney.html')
-
+@unauthorized
 def profile(request):
     if request.session.has_key('is_logged'):
         return render(request,'home/profile.html')
     return redirect('/home')
 
+@login_required(login_url='/handlelogin')
 def profile_edit(request,id):
     if request.session.has_key('is_logged'):
         add = User.objects.get(id=id)
-        return render(request,'home/profile_edit.html',{'add':add})
+        context = {'add':add}
+        return render(request,'home/profile_edit.html',context)
     return redirect("/home")
 
+@login_required(login_url='/handlelogin')
 def profile_update(request,id):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -83,6 +69,7 @@ def profile_update(request,id):
             return redirect("/profile")
     return redirect("/home")   
 
+@unauthorized
 def handleSignup(request):
     if request.method =='POST':
             # get the post parameters
@@ -100,7 +87,7 @@ def handleSignup(request):
             if request.method == 'POST':
                 try:
                     user_exists = User.objects.get(username=request.POST['uname'])
-                    messages.error(request," Username already taken, Try something else!!!")
+                    messages.error(request," Username already taken, Try something else!!!"+str(user_exists))
                     return redirect("/register")    
                 except User.DoesNotExist:
                     if len(uname)>15:
@@ -120,18 +107,15 @@ def handleSignup(request):
             user.first_name=fname
             user.last_name=lname
             user.email = email
-            # profile = UserProfile.objects.all()
-
             user.save()
-            # p1=profile.save(commit=False)
             profile.user = user
             profile.save()
             messages.success(request," Your account has been successfully created")
             return redirect("/")
     else:
-        return HttpResponse('404 - NOT FOUND ')
-    return redirect('/login')
+        return redirect('/login')
 
+@unauthorized
 def handlelogin(request):
     if request.method =='POST':
         # get the post parameters
@@ -148,7 +132,7 @@ def handlelogin(request):
         else:
             messages.error(request," Invalid Credentials, Please try again")  
             return redirect("/")  
-    return HttpResponse('404-not found')
+    return render(request,'home/login.html')
 
 
 def handleLogout(request):
@@ -158,7 +142,24 @@ def handleLogout(request):
         messages.success(request, " Successfully logged out")
         return redirect('home')
 
+@login_required(login_url='/handlelogin')
+def tables(request):
+    if request.session.has_key('is_logged'):
+        user_id = request.session["user_id"]
+        user = User.objects.get(id=user_id)
+        addmoney = Addmoney_info.objects.filter(user=user).order_by('-Date')
+        context={'addmoney':addmoney}
+        return render(request,'home/tables.html',context)
+    return redirect('home')
+
+@login_required(login_url='/handlelogin')
+def addmoney(request):
+    return render(request,'home/addmoney.html')
+
+
+
 #add money form
+@login_required(login_url='/handlelogin')
 def addmoney_submission(request):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -179,6 +180,8 @@ def addmoney_submission(request):
                 }
             return render(request,'home/index.html',context)
     return redirect('/index')
+
+@login_required(login_url='/handlelogin')
 def addmoney_update(request,id):
     if request.session.has_key('is_logged'):
         if request.method == "POST":
@@ -191,14 +194,17 @@ def addmoney_update(request,id):
             return redirect("/index")
     return redirect("/home")        
 
+@login_required(login_url='/handlelogin')
 def expense_edit(request,id):
     if request.session.has_key('is_logged'):
         addmoney_info = Addmoney_info.objects.get(id=id)
         user_id = request.session["user_id"]
         user1 = User.objects.get(id=user_id)
+
         return render(request,'home/expense_edit.html',{'addmoney_info':addmoney_info})
     return redirect("/home")  
 
+@login_required(login_url='/handlelogin')
 def expense_delete(request,id):
     if request.session.has_key('is_logged'):
         addmoney_info = Addmoney_info.objects.get(id=id)
@@ -209,30 +215,3 @@ def expense_delete(request,id):
 
 
     
-def weekly(request):
-    if request.session.has_key('is_logged') :
-        todays_date = datetime.date.today()
-        one_week_ago = todays_date-datetime.timedelta(days=7)
-        user_id = request.session["user_id"]
-        user1 = User.objects.get(id=user_id)
-        addmoney_info = Addmoney_info.objects.filter(user = user1,Date__gte=one_week_ago,Date__lte=todays_date)
-        sum = 0 
-        for i in addmoney_info:
-            if i.add_money == 'Expense':
-                sum=sum+i.quantity
-        addmoney_info.sum = sum
-        sum1 = 0 
-        for i in addmoney_info:
-            if i.add_money == 'Income':
-                sum1 =sum1+i.quantity
-        addmoney_info.sum1 = sum1
-        x= user1.userprofile.Savings+addmoney_info.sum1 - addmoney_info.sum
-        y= user1.userprofile.Savings+addmoney_info.sum1 - addmoney_info.sum
-        if x<0:
-            messages.warning(request,'Your expenses exceeded your savings')
-            x = 0
-        if x>0:
-            y = 0
-        addmoney_info.x = abs(x)
-        addmoney_info.y = abs(y)
-        return render(request,'home/weekly.html',{'addmoney_info':addmoney_info})

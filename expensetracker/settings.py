@@ -31,11 +31,7 @@ SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY') or 'django-insecure-n7dz3%@8kc(
 DEBUG=str(os.environ.get('DEBUG'))or'1'
 
 
-# ENV_ALLOWED_HOST = os.environ.get('DJANGO_ALLOWED_HOSTS') or None
-# ALLOWED_HOSTS = []
-# if ENV_ALLOWED_HOST is not None:
-#     ALLOWED_HOSTS = [ ENV_ALLOWED_HOST ]
-ALLOWED_HOSTS = ['pipeline-silly-tiger.mybluemix.net' , '127.0.0.1']
+ALLOWED_HOSTS = ['*' , '127.0.0.1']
 
 
 # Application definition
@@ -91,31 +87,6 @@ DATABASES = {
     }
 }
 
-POSTGRES_DB = os.environ.get("POSTGRES_DB")
-POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD")
-POSTGRES_USER = os.environ.get("POSTGRES_USER")
-POSTGRES_HOST = os.environ.get("POSTGRES_HOST")
-POSTGRES_PORT = os.environ.get("POSTGRES_PORT")
-
-POSTGRES_READY = (
-    POSTGRES_DB is not None
-    and POSTGRES_PASSWORD is not None
-    and POSTGRES_USER is not None
-    and POSTGRES_HOST is not None
-    and POSTGRES_PORT is not None
-)
-
-if POSTGRES_READY:
-    DATABASES = {
-        "default": {
-            "ENGINE": "django.db.backends.postgresql",
-            "NAME": POSTGRES_DB,
-            "USER": POSTGRES_USER,
-            "PASSWORD": POSTGRES_PASSWORD,
-            "HOST": POSTGRES_HOST,
-            "PORT": POSTGRES_PORT,
-        }
-    }
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

@@ -14,7 +14,6 @@
     />
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'profile.css' %}"> -->
   </head>
   <body>
     <nav class="navbar" role="navigation" aria-label="main navigation">
@@ -95,25 +94,12 @@
         <div class="row">
           <div class="col-md-6">
             <div class="profile-head">
-              <!-- <h5>
-                                         {{ user }}
-                                    </h5>
-                                    <h6>
-                                         {{ user.userprofile.profession }}
-                                    </h6> -->
             </div>
           </div>
           <div class="col-md-2">
-            {% comment %} <input type="submit" class="profile-edit-btn"
-            name="btnAddMore" value"edit"> {% endcomment %} {% comment %} {% for
+            {% comment %} <input type="submit" class="profile-edit-btn" name="btnAddMore" value="edit"> {% endcomment %} {% comment %} {% for
             x in add %} {% endcomment %}
             <div id="container">
-              <!-- <a
-                class="button is-danger"
-                href="{% url 'profile_edit' user.id%} "
-              >
-                Edit
-              </a> -->
               {% comment %} <br /><button type="submit" name="btnAddMore">
                 <a href="/index/ "> home</a>
               </button>

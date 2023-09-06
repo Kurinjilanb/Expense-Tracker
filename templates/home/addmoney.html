@@ -2,76 +2,36 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
-    <!-- <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"> -->
-    <!-- {% comment %} <link rel="stylesheet" type="text/css" href=try.css> {% endcomment %} -->
-    <!-- <link rel="stylesheet" type="text/css" href="{% static 'addmoney.css' %}">
-			<link rel="preconnect" href="https://fonts.gstatic.com"> -->
-    <link
-      rel="stylesheet"
-      href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"
-    />
-    <link
-      href="~bulma-calendar/dist/css/bulma-calendar.min.css"
-      rel="stylesheet"
-    />
-    <!-- <link href="https://fonts.googleapis.com/css2?family=Anton&display=swap" rel="stylesheet"> -->
+    <link rel="stylesheet"  href="https://cdn.jsdelivr.net/npm/bulma@0.9.4/css/bulma.min.css"/>
+    <link href="~bulma-calendar/dist/css/bulma-calendar.min.css" rel="stylesheet"/>
     <title>My Wallet</title>
   </head>
   <body>
-    <!-- <div class="bg-image"></div> -->
     <main
       class="container mt-6 is-centered is-max-widescreen has-text-centered is-half"
     >
-      <!-- <div class="container2"> -->
       <div class="row card is-half">
         <div class="">
           <div class="box is-centered has-text-centered">
-            <!-- <div class="card-header"> -->
             <h1 class="has-text-centered is-centered">My Wallet</h1>
           </div>
-          <form
-            method="post"
-            action="/addmoney_submission/"
-            class="card-content"
-          >
+          <form method="post" action="{%url 'addmoney_submission'%}" class="card-content" >
             {% csrf_token %}
 
             <div class="checkbox">
               What you want to add?<br />
               <label class="radio" for="add_money">
-                <input
-                  type="radio"
-                  name="add_money"
-                  id="add_money"
-                  value="Expense"
-                  checked
-                  required
-                />
+                <input type="radio" name="add_money" id="add_money" value="Expense" checked required/>
                 Expense
               </label>
 
               <label class="radio" for="add_money">
-                <input
-                  class="radio"
-                  type="radio"
-                  name="add_money"
-                  id="add_money"
-                  value="Income"
-                  checked
-                  required
-                />
-                Income</label
-              >
+                <input class="radio" type="radio" name="add_money" id="add_money" value="Income" checked required />Income</label >
             </div>
 
             <div>
               <label class="label" for="quantity">Amount:</label>
-              <input
-                class="input is-info"
-                type="number"
-                name="quantity"
-                required
-              />
+              <input class="input is-info" type="number" name="quantity" required />
             </div>
             <br />
             <br />
@@ -84,11 +44,7 @@
             <div>
               <div class="f1 dropdown is-active">
                 Select category-
-                <select
-                  class="Category dropdown-trigger"
-                  name="Category"
-                  required
-                >
+                <select class="Category dropdown-trigger" name="Category" required>
                   <br />
                   <option value="Food">Food</option>
                   <option value="Entertainment">Entertainment</option>
@@ -102,7 +58,7 @@
             <br />
             <br />
             <div class="btn">
-              <button type="submit" class="button is-link" href="/addmoney">
+              <button type="submit" class="button is-link" href="{%url 'addmoney'%}">
                 Submit
               </button>
             </div>
